@@ -1,13 +1,8 @@
 ---
-published: false
----
----
-
 layout: post
-title: 'sort option'
+title:  "sort option"
 categories: TodoList
 tags: Javascript
-
 ---
 # select option 값에 따른 렌더링 구현하기
 
@@ -100,6 +95,7 @@ if (!sortEl.value || sortEl.value === 'all') {
 ```
 이렇게 해주고 다시 결과를 확인해봤다.
 
+![ezgif com-gif-maker (55)](https://user-images.githubusercontent.com/56331400/215318124-b302ebb8-8935-46a7-81ae-158e3c1ededb.gif)
 
 
 처음 상태에서 순서를 변경하고 option을 선택한뒤 맘대로 드래그를 해도 원래 순서 그대로 돌아와있다.
