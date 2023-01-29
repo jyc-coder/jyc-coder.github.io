@@ -35,7 +35,7 @@ sortEl.addEventListener('change', async (e) => {
   }
 })
 ```
-![GOMCAM 20230129_1658580372.gif]({{site.baseurl}}/_posts/GOMCAM 20230129_1658580372.gif)
+
 
 # 정렬된 데이터 드래그 앤 드랍후 전체 데이터 렌더링 현상
 
@@ -101,5 +101,5 @@ if (!sortEl.value || sortEl.value === 'all') {
 이렇게 해주고 다시 결과를 확인해봤다.
 
 
-![ezgif.com-gif-maker (55).gif]({{site.baseurl}}/_posts/ezgif.com-gif-maker (55).gif)
+
 처음 상태에서 순서를 변경하고 option을 선택한뒤 맘대로 드래그를 해도 원래 순서 그대로 돌아와있다.
