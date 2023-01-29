@@ -1,0 +1,86 @@
+---
+layout: post
+title:  "Create CheckBox"
+categories: TodoList
+tags: Html Javascript Css
+---
+
+
+# 체크박스 구현하기
+
+해야할 일의 완료 유무를 파악하기 위한 checkbox 구현하기 
+
+`renderTodos()` 내부에서 추가로 렌더링할 요소를 추가한다. 
+```js
+const checkEl = document.createElement('input')
+checkEl.type = 'checkbox'
+checkEl.className = 'list__check'
+checkEl.checked = todo.done
+```
+
+해당 checkbox를 클릭할 때마다 todo.done값이 변경된 상태로 `updateTodo(todo)`를 호출해서 항목을 업데이트 시키는 addEventListener를 생성
+
+```js
+    checkEl.addEventListener('click', async () => {
+      todo.done = !todo.done
+      await updateTodo(todo)
+      renderTodos(todos)
+    })
+```
+
+## checkbox 스타일 설정
+
+그냥 input의 스타일 변경이 가능한가?
+
+```css
+   &__check {
+    height: 50px;
+    background-color: red;
+  }
+```
+적용되지 않음
+
+### label 커스텀
+
+```html
+<label class="list__checkbox">
+  <input type="checkbox" class="list__checkbox__check">
+  <span class="list__checkbox__checkmark"></span>
+</label>
+
+```
+이런 식으로 `label`내부에 `input`과 `span`을 넣어서 `input`의 opacity를 0으로 변경한뒤 span에 속성을 부여해서 클릭하면 체크가 될수 있게 설정했음
+
+```css
+&__checkbox {
+    display: block;
+    position: relative;
+    cursor: pointer;
+    font-size: 18px;
+
+    &__check {
+      position: absolute;
+      opacity: 0;
+      cursor: pointer;
+      height: 0;
+      width: 0;
+    }
+
+    &__checkmark {
+      position: absolute;
+      top: -11px;
+      left: -50px;
+      height: 25px;
+      width: 25px;
+
+      background-color: #eee;
+    }
+
+    &:hover input ~ &__checkmark {
+      background-color: #ccc;
+    }
+    input:checked ~ &__checkmark {
+      background-color: #7d7cd6;
+    }
+  }
+```

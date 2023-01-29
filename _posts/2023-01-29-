@@ -1,0 +1,37 @@
+---
+layout: post
+title:  "ErrorFix"
+categories: TodoList
+tags: Javascript
+---
+
+# order 번호 수정하기
+order를 0부터 시작하게 설정했지만, 아예 고정값으로 0부터 시작하는 바람에 할일 목록이 존재하는 상태에서 목록을 추가해도 0부터 시작하는 문제가 발생함
+
+따라서 항목을 추가했을때 order의 값을 할일 목록의 길이에 1을 더한 값으로 적용되도록 변경함
+
+```js
+ const todos = await readTodos()
+  let order = todos.length
+
+  await createTodo(inputText, order)
+  order++
+  renderTodos(await readTodos())
+```
+
+# 공백 내용 제외시키기
+
+아무런 내용도 없이 추가 버튼을 누르면 오류 메시지가 나타나게 설정함
+
+```js
+  if (inputText === '') {
+    window.alert('할일을 입력해주세요!')
+    return
+  }
+```
+
+# renderTodos 파라미터 추가
+`renderTodos(todos)`
+
+모듈화 시키면서 파라미터를 제거했지만, 가공된 todo 목록을 렌더링 하는 과정에서는 파라미터를 따로 추가해서 원하는 데이터만 렌더링 시키는 것이 타당하다고 생각해서 다시 파라미터를 추가했다. 
+
