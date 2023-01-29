@@ -2,10 +2,12 @@
 published: false
 ---
 ---
+
 layout: post
 title: 'sort option'
 categories: TodoList
 tags: Javascript
+
 ---
 # select option 값에 따른 렌더링 구현하기
 
