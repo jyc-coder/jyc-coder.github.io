@@ -1,0 +1,66 @@
+---
+layout: post
+title: "product"
+categories: TeamProject
+teags: javascript html css
+---
+
+# 제품 엘리먼트 레이아웃 제작
+
+판매하는 제품과 이름 가격을 표시하는 엘리먼트를 제작
+- div를 생성하고 innerHTML에 dom을 추가함
+`js/product.js`
+```js
+import wishOff from '../image/wish-off.png'
+import rolex from '../image/brandFocus_rolex.jpg'
+export function appendProducts() {
+  const productEl = document.createElement('div')
+  productEl.className = 'product'
+  const imgpath = ''
+  productEl.innerHTML = /*html */ `
+     <div class="product__title">
+        <div>
+          <div class="title">Just Dropped</div>
+          <div class="sub_title">발매 상품</div>
+        </div>
+      </div>
+      <div class="product__list">
+        <div class="product__list__first">
+          <div class="product__item">
+            <a class="product__item__inner" href="#">
+              <div class="thumb_box">
+                <div class="item">
+                  <picture class="item__img">
+                    <img
+                      src=${rolex}
+                      alt="제품이미지"
+                    />
+                  </picture>
+                  <span aria-label="관심상품" role="button" class="btn_wish">
+                    <img class ="wish-icon" src=${wishOff} alt="찜" />
+                  </span>
+                </div>
+              </div>
+              <div class="info_box">
+                <div class="brand">
+                  <p class="brand__text">nike</p>
+                </div>
+                <p class="name">nike x tom skdjflskdjflksjd</p>
+                <div class="price">
+                  <div class="amount">
+                    <em class="amount_num">137,000</em>
+                  </div>
+                </div>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+    `
+  document.body.append(productEl)
+}
+
+```
+![image](https://user-images.githubusercontent.com/56331400/217574379-68b84115-a5db-41bc-ae96-e4a12ef23415.png)
+
+Api 기능을 사용해서 여러개의 목록을 출력하는 기능은 아직 구현하지 않음. 추후에 구현 예정
