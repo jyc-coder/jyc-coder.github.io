@@ -72,6 +72,9 @@ export async function appendItem() {
 
 ```
 
+![image](https://user-images.githubusercontent.com/56331400/218106856-cfe992dd-d5a7-4e61-b711-03da1e642c0a.png)
+
+
 ## TODO
 - 렌더링 메소드의 파라미터에 따라서 원하는 조건의 데이터를 렌더링할수 있게 설정하기
 - 더보기 기능 구현
