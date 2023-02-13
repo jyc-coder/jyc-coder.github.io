@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "item.js 고도화 작업"
+title: "Advencement item.js"
 categories: TeamProject
 teags: javascript html css
 ---
