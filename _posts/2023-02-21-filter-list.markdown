@@ -1,233 +1,87 @@
 ---
 layout: post
-title: "create search filter list"
+title: "querystring error, make shop page"
 categories: TeamProject
 teags: javascript 
 ---
 
 
+# a태그 href에 쿼리스트링을 추가한 다음 이벤트 전파로 인해서 찜목록을 클릭해도 상세페이지로 넘어가버린다.
 
-# 검색 필터 리스트 만들기
-- 최상위 타이틀 내부에 여러개의 메뉴들이 추가된다.
+- 쿼리스트링 추가 전에는 찜목록 기능이 제대로 작동하는 듯 했으나, 쿼리스트링을 추가한 후에는 이벤트 버블링을 막아내지 못하고 상세 페이지로 이동해버린다.
+
+## 해결 방법
+
+- 찜목록 아이콘의 onclick에 원래 기능을 막아버리는 e.preventDefault()를 호출한 다음 버블링 차단을 위해서 e.stopPropagation()을 호출했더니 해결되었다.
+`js/item.js`
 ```js
-export function appendFilterList(category, menu) {
-  //filterList 렌더링
-  const filterListEl = document.createElement('div')
-  filterListEl.className = 'filter_list'
-  filterListEl.innerHTML = /*html */ `
-    <div class="filter_title">
-       <div class="title_box">
-              <span class="main_title">${category}</span>
-              <div class="placeholder">모든 ${category}</div>
-            </div>
-            <div class="icon_box"><img src=${plus} alt="확장" /></div>
-            
-    </div>
-    <div class="filter_menu"> </div>
-  `
-  document.querySelector('.search_filter').append(filterListEl)
-  }
-```
-
-
-
-- 필터 리스트를 렌더링하는 `appendMenu(container,menu,isfirst)`를 구현함
-- `container` : 렌더링 위치 , `menu`: 메뉴 정보, `isfirst`: 최상위 메뉴인지 아닌지 여부 파악을 위한 변수
-- 재귀 방식으로 메소드를 구현해서, ul엘리먼트를 생성한 다음 그 안에 li엘리먼트를 추가한다.
-- 만약 세부 메뉴(submenus)가 존재한다면 해당 메소드를 한번 더 호출한다. 
-- 세부 메뉴가 다 더이상 존재하지 않는다면 거기서 종료
-- 세부 메뉴와 상위 메뉴의 구분을 위해서 ul의 클래스에 sub을 추가했고, sub 클래스에는 padding 값을 부여했다.
-`css/shop.scss`
-```css
- .menu_list {
-          box-sizing: border-box;
-          margin: 0;
-          padding: 0;
-          list-style: none;
-          max-height: 315px;
-          overflow-y: auto;
-          .sub {
-            padding: 5px 0 6px 25px;
-            display: none;
-          }
-          ...
-          }
-```
-
-`js/shop.js`
-```js
-export function appendMenu(container, menu, isfirst, test) {
-  if (!menu || !menu.length) return
-  console.log(container, menu)
-  const ul = document.createElement('ul')
-  ul.className = isfirst ? 'menu_list' : 'menu_list sub'
-
-  for (const { title, submenus } of menu) {
-    // 체크박스에 태그 이름과 체크 여부 파악을 위한 데이터 속성 부여
-    const li = document.createElement('li')
-    li.className = 'menu'
-    li.innerHTML = /*html */ `
-     <a href="#" class="menu_link">
-                  <img src=${unchecked} alt="체크박스" />
-                  <span class="link_text">${title}</span>
-    `
-    if (submenus) {
-      appendMenu(li, submenus, false, true)
-      li.className = 'menu'
-    }
-
-    ul.appendChild(li)
-  }
-  ...
-  
-  }
-```
-![image](https://user-images.githubusercontent.com/56331400/220144279-aee0b1e7-6fe6-46c0-a038-08d5a6c1c364.png)
-
-외관상으로는 좋지만 아직 기능을 추가하지 않았다.
-
-# 상위 타이틀을 클릭하면 메뉴가 나타나고, 메뉴를 클릭하면 세부 메뉴가 나타나게 해야한다.
-
-- 각각의 메뉴에 이벤트를 추가했고, 클릭하면 display의 속성을 토글하는 방식으로 구현했다.
-```js
-// 기능 구현 1. 하나만 체크할수 있게 설정
-  const menuListEl = container.querySelector('.menu_list')
-  const menuEls = menuListEl.querySelectorAll('.menu')
-
-  menuEls.forEach((e) => {
- 
-    e.addEventListener('click', (target) => {
-      // console.log('click')
-      target.preventDefault()
-      target.stopPropagation()
-    
-      // console.log(target.target.innerText)
-      menuEls.forEach((j) => {
-        const checkbox = j.querySelector('img')
-        checkbox.src = unchecked
-      })
-      e.querySelector('img').src =
-        e.querySelector('img').src === unchecked ? checked : unchecked
-      const subEls = e.querySelector('.menu_list .sub')
-      if (subEls) {
-        subEls.style.display =
-          subEls.style.display === 'block' ? 'none' : 'block'
+wishicon.onclick = (e) => {
+      // 찜목록 클릭시, 찜목록 이미지 src값에 따라 제품의 id값을 로컬 스토리지에 추가/제거
+      if (wishicon.src == wishOn) {
+        wishlist = wishlist.filter((e) => e !== el.getAttribute('data-id'))
+        localStorage.setItem('wishlist', wishlist)
+        console.log(wishlist)
+      } else {
+        wishlist.push(el.getAttribute('data-id'))
+        localStorage.setItem('wishlist', wishlist)
+        console.log(wishlist)
       }
-      target.stopPropagation()
-    })
+      wishicon.src = wishicon.src === wishOff ? wishOn : wishOff
+
+      e.preventDefault()
+      e.stopPropagation()
+    }
   })
 ```
-## 문제: 세부 메뉴를 클릭했을때 이벤트가 2번 발생한다.
 
-- 항목을 클릭했을때 'click'이 2번 발생하는 문제가 있었다. 
-- 렌더링을 전부 진행한 다음에 기능을 추가했는데, 중복으로 추가된 것이 원인으로 추정됨
-
-## 해결 : 이벤트를 추가하는 위치를 변경함
-- li 엘리먼트를 생성하고 innerHTML에 내용을 추가한 다음에 li에 토글 메소드를 추가했다.
-- 재귀 방식으로 메소드를 구현하다보니 전체 만들어진 엘리먼트에 기능을 추가하면서 중복될 가능성이 있다고 판단하여 위치를 변경했더니 해결됨
-
-## 문제2: 다른 메뉴를 클릭할때 다른 곳의 체크박스를 전부 해제하고 싶다.
-- 체크박스를 클릭했을때 이미지 변경이 잘 되지만 전체 필터중에서 선택되는 곳을 한군데로 줄여서 클릭된 태그에 해당하는 결과값을 렌더링 해주고 싶었다.
-
-## 해결 : 선택된 항목을 제외한 나머지 전부의 이미지를 변경함
-- search_filter 내부의 menu 클래스를 가진 li 엘리먼트 (allMenuEl)을 선언함
-- allMenuEl을 배열화 시켜서 선택된 li를 제외한 모든 엘리먼트의 이미지src를 unchecked로 변경함으로써 문제 해결
-
+# 상점 페이지 레이아웃 구현 
+- 상점의 제품목록과 필터링 옵션 컴포넌트를 렌더링하는 메소드를 제작했음
+- 상점 페이지의 제품 아이템의 이미지 크기가 살짝 작았으면 해서 이미지 크기를 줄인 버전의 메소드를 제작했다.appendSmallProducts(tag, dpnum, num, content)
+- 4번째 파라미터는 append되는 위치로, 상점페이지에서는 body가 아니라 content라는 컨테이너 안에서 구현될 것이기 때문에 따로 메소드를 제작함!
+- 현재 체크박스 필터는 제대로 구현되지않았음. 서로 다른 깊이의 데이터를 어떤 방식으로 선택창을 만들어야할지 고민해봐야겠음
+`js/shop.js`
 ```js
-export function appendMenu(container, menu, isfirst, test) {
-  ...
+export default function appendShopContent() {
+  const catList = ['카테고리', '브랜드', '성별', '가격']
+  const contentEl = document.createElement('div')
+  contentEl.className = 'content'
 
-  for (const { title, submenus } of menu) {
-    // 체크박스에 태그 이름과 체크 여부 파악을 위한 데이터 속성 부여
-    const li = document.createElement('li')
-    li.className = 'menu'
-    li.innerHTML = /*html */ `
-     <a href="#" class="menu_link">
-                  <img src=${unchecked} alt="체크박스" />
-                  <span class="link_text">${title}</span>
-    `
-    function toggleSiblings(me) {
-      const checkbox = me.querySelector('img')
-      checkbox.src = checked
-      const subEls = me.querySelector('.menu_list.sub')
-      if (subEls) {
-        subEls.style.display =
-          subEls.style.display === 'block' ? 'none' : 'block'
-      }
-      const allMenuEl = document
-        .querySelector('.search_filter')
-        .querySelectorAll('.menu')
-      Array.from(allMenuEl)
-        .filter((el) => el !== me)
-        .forEach((menu) => {
-          const checkbox = menu.querySelector('img')
-          checkbox.src = unchecked
-        })
-    }
-    li.addEventListener('click', (event) => {
-      console.log(event.currentTarget.textContent.trim())
-      event.preventDefault()
-      event.stopPropagation()
-      toggleSiblings(li)
-    })
+  contentEl.innerHTML = /*html */ `
+    <div class="search_filter">
+        <div class="filter_status">
+          <div class="status_box">
+            <span class="status_text"> 필터 </span>
+          </div>
+        </div>
+     `
 
-    if (submenus) {
-      appendMenu(li, submenus, false, true)
-      li.className = 'menu'
-    }
+  document.body.append(contentEl)
+  const searchFilterEl = document.querySelector('.search_filter')
+  const filterListEl = document.createElement('div')
+  filterListEl.className = 'filter_list'
 
-    ul.appendChild(li)
-  }
+  catList.forEach((e) => {
+    const filterListEl = document.createElement('div')
+    filterListEl.className = 'filter_list'
+    filterListEl.innerHTML = /*html */ `
+     <div class="filter_title">
+            <div class="title_box">
+              <span class="main_title">${e}</span>
+              <div class="placeholder">모든 ${e}</div>
+            </div>
+            <div class="icon_box"><img class="more_icon" src=${plus}  alt="확장" /></div>
+          </div>
+      `
 
-  container.appendChild(ul)
-  
+    searchFilterEl.append(filterListEl)
+  })
+  appendSmallProducts(' 남성', 4, 12, contentEl)
 }
-```
-
-
-## 문제3 : 다른 상위 메뉴를 선택했을 때 이전에 고른 메뉴의 세부메뉴를 숨기고 싶다.
-- 이제 하나씩만 체크되지만, 다른 메뉴를 선택했을때, 보여졌던 세부메뉴가 그대로 남아있는 현상이 있었다.
-
-## 해결 : 배열화 시겼던 allMEnuEl에 서브메뉴 display style 변경 코드 추가
-- 선택된 요소를 제외한 나머지 엘리먼트의 이미지 src를 변경했듯이, 나머지 세부메뉴들을 전부 선택해서 display 속성을 변경함
-- menu의 서브메뉴가 존재하고, 선택된 엘리먼트의 세부메뉴가 아니라면, 해당 display 속성을 none으로 변경함
-`toggleSiblings -> toggleOnly`로 이름 변경
 
 ```
-function toggleOnly(me) {
-      const checkbox = me.querySelector('img')
-      checkbox.src = checked
-      const subEls = me.querySelector('.menu_list.sub')
-      if (subEls) {
-        subEls.style.display =
-          subEls.style.display === 'block' ? 'none' : 'block'
-      }
-      const allMenuEl = document
-        .querySelector('.search_filter')
-        .querySelectorAll('.menu')
-      Array.from(allMenuEl)
-        .filter((el) => el !== me)
-        .forEach((menu) => {
-          const checkbox = menu.querySelector('img')
-          checkbox.src = unchecked
-          const subEls = menu.querySelector('.menu_list.sub')
-          if (subEls && !menu.contains(me)) {
-            subEls.style.display = 'none'
-          }
-        })
-    }
-```
+![image](https://user-images.githubusercontent.com/56331400/219062486-085ca30c-f296-4a5d-9330-683bfa79b54a.png)
 
 
-# 결과
-
-![ezgif com-video-to-gif (2)](https://user-images.githubusercontent.com/56331400/220155892-9a0f1f80-0715-4f78-ba0d-2bd804dd922c.gif)
-
-원하는 방식대로 동작되는 것을 확인함
-
-# TODO
-- 체크박스에 해당하는 제품 렌더링
-- 체크 필터가 같이 스크롤되어 따라오는 기능 구현
-
-## OPTION
-- 무한 스크롤
+TODO
+- 체크박스 필터 컴포넌트 제작하기
+- 체크하면 검색 결과를 렌더링하는 기능 구현
