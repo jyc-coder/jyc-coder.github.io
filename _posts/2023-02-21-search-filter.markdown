@@ -8,6 +8,7 @@ teags: javascript
 
 
 # 검색 필터 리스트 만들기
+
 - 최상위 타이틀 내부에 여러개의 메뉴들이 추가된다.
 ```js
 export function appendFilterList(category, menu) {
