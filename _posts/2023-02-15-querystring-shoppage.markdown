@@ -5,9 +5,13 @@ categories: TeamProject
 teags: javascript 
 ---
 
+
 # a태그 href에 쿼리스트링을 추가한 다음 이벤트 전파로 인해서 찜목록을 클릭해도 상세페이지로 넘어가버린다.
+
 - 쿼리스트링 추가 전에는 찜목록 기능이 제대로 작동하는 듯 했으나, 쿼리스트링을 추가한 후에는 이벤트 버블링을 막아내지 못하고 상세 페이지로 이동해버린다.
+
 ## 해결 방법
+
 - 찜목록 아이콘의 onclick에 원래 기능을 막아버리는 e.preventDefault()를 호출한 다음 버블링 차단을 위해서 e.stopPropagation()을 호출했더니 해결되었다.
 `js/item.js`
 ```js
