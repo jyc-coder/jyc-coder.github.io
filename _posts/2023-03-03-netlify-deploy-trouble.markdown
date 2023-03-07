@@ -69,3 +69,15 @@ mutation : 새로운 변수를 생성하거나 기존 변수를 재할당하지 
 관련 경고 발생에 대한 검색을 진행했지만 저와 같은 현상이 있는 사람만 있고 이렇다 할 해답이 없어서 조사한 정보를 통해 추론했다.
 dotenv 제거후 deploy된 사이트를 테스트에서 오류는 발생하지 않았습니다. 
 
+# github repo를 커밋로그 포함해서 옮기는 방법
+
+기존 repo를 다른 private 레포지토리에 옮길 상황이 생겨서 방법을 조사해봤다.
+
+git clone -mirror로 시도했더니  `deny updating a hidden ref` 라는 오류가 생기므로 git clone --bare를 사용했다.
+
+
+1. 터미널 열고
+2. $ git clone --bare https://github.com/옮기고싶은repo.git
+3. $ cd 옮기고싶은repo
+4. $ git push --mirror https://github.com/최종목적지repo.git
+5. profit!!
