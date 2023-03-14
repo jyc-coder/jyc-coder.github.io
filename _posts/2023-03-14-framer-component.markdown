@@ -38,12 +38,12 @@ export function LineItem({ iconColor, name, price }) {
     const [pounds, pence] = price.toString().split(".")
     return (
         <div style={containerStyle}>
-            <div style={{ ...iconStyle, backgroundColor: iconColor }} />
+            <div style={% raw %}{{ ...iconStyle, backgroundColor: iconColor }}{% endraw %} />
             <div style={nameStyle}>{name}</div>
             <div>
-                $<span style={{ fontSize: 20, fontWeight: 400 }}>{pounds}</span>
+                $<span style={% raw %}{{ fontSize: 20, fontWeight: 400 }}{% endraw %}>{pounds}</span>
                 .
-                <span style={{ fontSize: 14, fontWeight: 200 }}>
+                <span style={% raw %}{{ fontSize: 14, fontWeight: 200 }}{% endraw %}>
                     {pence || "00"}
                 </span>
             </div>
