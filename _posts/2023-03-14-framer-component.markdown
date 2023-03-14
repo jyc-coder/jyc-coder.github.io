@@ -2,7 +2,7 @@
 layout: post
 title: "Let's make component with Framer code"
 categories: UI
-teags: Prototype UI
+tags: Prototype UI
 ---
 
 
