@@ -105,12 +105,12 @@ export function BarChart({ numberOfBars, thickness, color }) {
         <div style={containerStyle}>
             {bars.map((barHeight) => (
                 <div
-                    style={{
+                    style={% raw %}{{
                         width: thickness,
                         height: barHeight,
                         backgroundColor: color,
                         borderRadius: `${barRadius}px ${barRadius}px 0 0 `,
-                    }}
+                    }}{% endraw %}
                 />
             ))}
         </div>
