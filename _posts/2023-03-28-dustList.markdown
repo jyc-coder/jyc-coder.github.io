@@ -68,7 +68,19 @@ const oneDust = dustList?.response.body.items.find((dust) => dust.stationName ==
 
 - singleDust 에서 전달된 oneDust를 사용해서 미세먼지 정보를 렌더링
 ```jsx
+import React, { useEffect } from 'react'
+import Box from '@mui/material/Box'
+import CardContent from '@mui/material/CardContent'
+import Typography from '@mui/material/Typography'
+import Card from '@mui/material/Card'
+
+import { Container } from '@mui/material'
+import { GRADE } from './../constants/pmgrade'
+import { useGetDustQuery } from '../apis/axios'
+import { changePmData, useDust } from '../store/slices/dust'
+
 function DustCard({ oneDust }) {
+
     const {sidoName,stationName, pm10Grade, pm10Value} =  oneDust
     return (
         // 카드 컴포넌트
