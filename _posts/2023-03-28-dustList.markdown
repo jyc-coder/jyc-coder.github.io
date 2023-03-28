@@ -72,7 +72,7 @@ function DustCard({ oneDust }) {
     const {sidoName,stationName, pm10Grade, pm10Value} =  oneDust
     return (
         // 카드 컴포넌트
-        <Card sx={{ minWidth: 275, marginBottom: '20px', background: '#6c770b' }}>
+        <Card sx={% raw %}{{ minWidth: 275, marginBottom: '20px', background: '#6c770b' }}{% endraw %}>
             <CardContent>
                 <Box sx={% raw %}{{ display: 'flex', justifyContent: 'center', gap: '10px' }}{% endraw %}>
                     <Typography sx={{ fontSize: 20 }} color="white" gutterBottom>
