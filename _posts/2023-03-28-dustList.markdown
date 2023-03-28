@@ -74,17 +74,17 @@ function DustCard({ oneDust }) {
         // 카드 컴포넌트
         <Card sx={% raw %}{{ minWidth: 275, marginBottom: '20px', background: '#6c770b' }}{% endraw %}>
             <CardContent>
-                <Box sx={% raw %}{{ display: 'flex', justifyContent: 'center', gap: '10px' }}{% endraw %}>
+                <Box sx={{ display: 'flex', justifyContent: 'center', gap: '10px' }}>
                     <Typography sx={{ fontSize: 20 }} color="white" gutterBottom>
                         {sidoName}
                     </Typography>
-                    <Typography sx={% raw %}{{ fontSize: 15, paddingTop: '5px' }}{% endraw %} color="white" gutterBottom>
+                    <Typography sx={{ fontSize: 15, paddingTop: '5px' }} color="white" gutterBottom>
                         {stationName}
                     </Typography>
                 </Box>
-                <Container maxWidth="sm" sx={% raw %}{{ display: ' flex', alignItems: 'center', justifyContent: 'center' }}{% endraw %}>
+                <Container maxWidth="sm" sx={{ display: ' flex', alignItems: 'center', justifyContent: 'center' }}>
                     <Box
-                        sx={% raw %}{{
+                        sx={{
                             display: 'flex',
                             justifyContent: 'center',
                             alignItems: 'center',
@@ -93,17 +93,17 @@ function DustCard({ oneDust }) {
                             borderRadius: 5,
                             backgroundColor: 'primary.dark',
                             flexDirection: 'column',
-                        }}{% endraw %}
+                        }}
                     >
                         <Typography variant="h5" component="div" color="white" fontWeight="700">
                             {GRADE[pm10Grade]}
                         </Typography>
                     </Box>
                 </Container>
-                <Typography sx={% raw %}{{ mb: 1.5 }}{% endraw %} color="white" marginTop="10px">
+                <Typography sx={{ mb: 1.5 }} color="white" marginTop="10px">
                     미세먼지 수치 : {pm10Value}
                 </Typography>
-                <Typography sx={% raw %}{{ mb: 1.5 }}{% endraw %} color="white" marginTop="10px">
+                <Typography sx={{ mb: 1.5 }}{% endraw %} color="white" marginTop="10px">
                     ({dataTime})
                 </Typography>
             </CardContent>
@@ -112,22 +112,18 @@ function DustCard({ oneDust }) {
 }
 ```
 
-
 `LocationSelect`
   ```jsx
   function LocationSelect({ dustList }) {
     const { dust, dispatch } = useDust()
     const { sido, station } = dust
-
     // api 데이터 결과값
-
     const dusts = dustList.response.body.items
 
     /** sido 를 선택했을때 sido의 값을 변경하는 */
     const handleSido = (event) => {
         dispatch(changeSido(event.target.value))
     }
-
     /** 선택된 stationName을 바탕으로 pmData를 변경하는 메소드 */
     const handleStation = (event) => {
         dispatch(changeStation(event.target.value))
@@ -135,10 +131,9 @@ function DustCard({ oneDust }) {
         // sido 선택으로 저장한 데이터를 바탕으로 선택
         // 선택한 지역의 station에 해당하는 정보를 가져온다.
     }
-
     return (
-        <Box sx={% raw %}{{ minWidth: 300, marginBottom: '10px' }}{% endraw %}>
-            <FormControl sx={% raw %}{{ minWidth: 120 }}{% endraw %}>
+        <Box sx={{ minWidth: 300, marginBottom: '10px' }}>
+            <FormControl sx={{ minWidth: 120 }}>
                 <InputLabel id="demo-simple-select-label">시/도</InputLabel>
                 <Select labelId="demo-simple-select-label" id="demo-simple-select" value={sido} label="sido" onChange={(e) => handleSido(e)}>
                     <MenuItem value={'경북'}>경북</MenuItem>
@@ -160,7 +155,7 @@ function DustCard({ oneDust }) {
                     <MenuItem value={'인천'}>인천</MenuItem>
                 </Select>
             </FormControl>
-            <FormControl sx={% raw %}{{ minWidth: 120 }}{% endraw %}>
+            <FormControl sx={{ minWidth: 120 }}>
                 <InputLabel id="demo-simple-select-label">지역 선택</InputLabel>
                 <Select labelId="demo-simple-select-label" id="demo-simple-select" value={station} label="station" onChange={(e) => handleStation(e)}>
                     {dusts?.map((item) => {
@@ -206,19 +201,19 @@ function DustCard({ oneDust }) {
     }, [])
     return (
         // 카드 컴포넌트
-        <Card sx={% raw %}{{ minWidth: 275, marginBottom: '20px', background: '#6c770b' }}{% endraw %}>
+        <Card sx={{ minWidth: 275, marginBottom: '20px', background: '#6c770b' }}>
             <CardContent>
-                <Box sx={% raw %}{{ display: 'flex', justifyContent: 'center', gap: '10px' }}{% endraw %}>
-                    <Typography sx={% raw %}{{ fontSize: 20 }} color="white" gutterBottom>
+                <Box sx={{ display: 'flex', justifyContent: 'center', gap: '10px' }}>
+                    <Typography sx={{ fontSize: 20 }} color="white" gutterBottom>
                         {pmData.sidoName}
                     </Typography>
-                    <Typography sx={% raw %}{{ fontSize: 15, paddingTop: '5px' }}{% endraw %} color="white" gutterBottom>
+                    <Typography sx={{ fontSize: 15, paddingTop: '5px' }}{% endraw %} color="white" gutterBottom>
                         {pmData.stationName}
                     </Typography>
                 </Box>
-                <Container maxWidth="sm" sx={% raw %}{{ display: ' flex', alignItems: 'center', justifyContent: 'center' }}{% endraw %}>
+                <Container maxWidth="sm" sx={{ display: ' flex', alignItems: 'center', justifyContent: 'center' }}>
                     <Box
-                        sx={% raw %}{{
+                        sx={{
                             display: 'flex',
                             justifyContent: 'center',
                             alignItems: 'center',
@@ -227,17 +222,17 @@ function DustCard({ oneDust }) {
                             borderRadius: 5,
                             backgroundColor: 'primary.dark',
                             flexDirection: 'column',
-                        }}{% endraw %}
+                        }}
                     >
                         <Typography variant="h5" component="div" color="white" fontWeight="700">
                             {GRADE[pmData.pm10Grade]}
                         </Typography>
                     </Box>
                 </Container>
-                <Typography sx={% raw %}{{ mb: 1.5 }}{% endraw %} color="white" marginTop="10px">
+                <Typography sx={{ mb: 1.5 }} color="white" marginTop="10px">
                     미세먼지 수치 : {pmData.pm10Value}
                 </Typography>
-                <Typography sx={% raw %}{{ mb: 1.5 }}{% endraw %} color="white" marginTop="10px">
+                <Typography sx={{ mb: 1.5 }} color="white" marginTop="10px">
                     ({pmData.dataTime})
                 </Typography>
             </CardContent>
