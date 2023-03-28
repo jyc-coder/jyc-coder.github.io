@@ -1,0 +1,252 @@
+---
+layout: post
+title: "Dust service"
+categories: react
+teags: react rtk_query
+---
+
+# 미세먼지 api 를 사용한 미세먼지 정보 제공 서비스 제작하기
+
+
+## 왜 지역은 바뀌여도 문제 없는데 시/도 를 바꾸면 오류가 되나요..?
+
+이걸 얘기하기전에 먼저 알아야할 정보
+
+파일 구조
+```bash
+│  App.css
+│  App.jsx
+│  index.css
+│  main.jsx
+│
+├─apis
+│      axios.jsx
+│
+├─assets
+│      react.svg
+│
+├─components
+│      DustCard.jsx
+│      LocationSelect.jsx
+│
+├─constants
+│      data.json
+│      pmgrade.js
+│
+├─pages
+│      FavoriteDust.jsx
+│      MultiDust.jsx
+│      SingleDust.jsx
+│
+└─store
+    │  index.js
+    │
+    └─slices
+            dust.js
+``` 
+
+`LocationSelect` : 미세먼지 정보를 보고자 하는 시/도 와 지역을 선택하는 select component
+`DustCard` : 미세먼지에 대한 정보를 보여주는 component
+
+### 정보를 보여주는 방식 
+- 먼저 axios.jsx 에서 작성한 rtk query 방식을 통해 api에 요청하여 얻은 데이터를 사용하여 `SingleDust`페이지에 props로 전달한다
+- api의 경우는 시/도 를 인자로 넣어서 전달하면 그곳에 해당하는 지역들의 데이터를 리턴한다.
+- 단일 지역으로 하나만 보여주는 페이지를 위해서, 하나의 데이터만 따로 가공한 데이터를 prop로 전달 (singleDust) 
+- 처음 페이지가 로드될때는 sido, station의 값이 없으면 빈 모습으로 나타나므로 '서울', '한강대로' 로 지정해서 미세먼지 정보를 보여주게 설정함
+`App.jsx`
+```
+const { dust, dispatch } = useDust()
+const { value, sido, station } = dust // initialState
+const { data: dustList, isLoading, isError } = useGetDustQuery(sido)
+const oneDust = dustList?.response.body.items.find((dust) => dust.stationName === station)
+                                          .
+                                          .
+                                          .
+<Route path="/" element={<SingleDust dustList={dustList} oneDust={oneDust} />} />
+```
+
+- singleDust 에서 전달된 oneDust를 사용해서 미세먼지 정보를 렌더링
+```jsx
+function DustCard({ oneDust }) {
+    const {sidoName,stationName, pm10Grade, pm10Value} =  oneDust
+    return (
+        // 카드 컴포넌트
+        <Card sx={{ minWidth: 275, marginBottom: '20px', background: '#6c770b' }}>
+            <CardContent>
+                <Box sx={{ display: 'flex', justifyContent: 'center', gap: '10px' }}>
+                    <Typography sx={{ fontSize: 20 }} color="white" gutterBottom>
+                        {sidoName}
+                    </Typography>
+                    <Typography sx={{ fontSize: 15, paddingTop: '5px' }} color="white" gutterBottom>
+                        {stationName}
+                    </Typography>
+                </Box>
+                <Container maxWidth="sm" sx={{ display: ' flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            width: 150,
+                            height: 100,
+                            borderRadius: 5,
+                            backgroundColor: 'primary.dark',
+                            flexDirection: 'column',
+                        }}
+                    >
+                        <Typography variant="h5" component="div" color="white" fontWeight="700">
+                            {GRADE[pm10Grade]}
+                        </Typography>
+                    </Box>
+                </Container>
+                <Typography sx={{ mb: 1.5 }} color="white" marginTop="10px">
+                    미세먼지 수치 : {pm10Value}
+                </Typography>
+                <Typography sx={{ mb: 1.5 }} color="white" marginTop="10px">
+                    ({dataTime})
+                </Typography>
+            </CardContent>
+        </Card>
+    )
+}
+```
+
+
+`LocationSelect`
+  ```jsx
+  function LocationSelect({ dustList }) {
+    const { dust, dispatch } = useDust()
+    const { sido, station } = dust
+
+    // api 데이터 결과값
+
+    const dusts = dustList.response.body.items
+
+    /** sido 를 선택했을때 sido의 값을 변경하는 */
+    const handleSido = (event) => {
+        dispatch(changeSido(event.target.value))
+    }
+
+    /** 선택된 stationName을 바탕으로 pmData를 변경하는 메소드 */
+    const handleStation = (event) => {
+        dispatch(changeStation(event.target.value))
+
+        // sido 선택으로 저장한 데이터를 바탕으로 선택
+        // 선택한 지역의 station에 해당하는 정보를 가져온다.
+    }
+
+    return (
+        <Box sx={{ minWidth: 300, marginBottom: '10px' }}>
+            <FormControl sx={{ minWidth: 120 }}>
+                <InputLabel id="demo-simple-select-label">시/도</InputLabel>
+                <Select labelId="demo-simple-select-label" id="demo-simple-select" value={sido} label="sido" onChange={(e) => handleSido(e)}>
+                    <MenuItem value={'경북'}>경북</MenuItem>
+                    <MenuItem value={'대전'}>대전</MenuItem>
+                    <MenuItem value={'충북'}>충북</MenuItem>
+                    <MenuItem value={'충남'}>충남</MenuItem>
+                    <MenuItem value={'경남'}>경남</MenuItem>
+                    <MenuItem value={'울산'}>울산</MenuItem>
+                    <MenuItem value={'광주'}>광주</MenuItem>
+                    <MenuItem value={'전북'}>전북</MenuItem>
+                    <MenuItem value={'전남'}>전남</MenuItem>
+                    <MenuItem value={'제주'}>제주</MenuItem>
+                    <MenuItem value={'대구'}>대구</MenuItem>
+                    <MenuItem value={'서울'}>서울</MenuItem>
+                    <MenuItem value={'경기'}>경기</MenuItem>
+                    <MenuItem value={'강원'}>강원</MenuItem>
+                    <MenuItem value={'부산'}>부산</MenuItem>
+                    <MenuItem value={'세종'}>세종</MenuItem>
+                    <MenuItem value={'인천'}>인천</MenuItem>
+                </Select>
+            </FormControl>
+            <FormControl sx={{ minWidth: 120 }}>
+                <InputLabel id="demo-simple-select-label">지역 선택</InputLabel>
+                <Select labelId="demo-simple-select-label" id="demo-simple-select" value={station} label="station" onChange={(e) => handleStation(e)}>
+                    {dusts?.map((item) => {
+                        return (
+                            <MenuItem key={item.stationName} value={item.stationName}>
+                                {item.stationName}
+                            </MenuItem>
+                        )
+                    })}
+                </Select>
+            </FormControl>
+        </Box>
+    )
+}
+
+  ```
+  이렇게 시/도 와 지역을 선택하면 slice에 있는 state들의 값이 변경되게 dispatch를 호출한다.
+  
+  문제는 지역을 변경하면 아무런 문제가 없다가. 시/도를 바꾸면 sidoName을 찾을수 없다는 오류가 발생했다
+  
+  ## 문제 해결
+  애초에 `oneDust`의 코드 내용에 문제가 있었다. 처음에는 default로 지정한 값을 find메소드를 통해 찾았겠지만, 만약 지역을 변경하는 순간에 A 시/도 에 속한 a지역을 B 시/도에서 찾으려는 작업을 하니
+  당연히 undefined가 나올 수밖에 없었다.
+  하지만 지역을 바꿨을 때 dustList는 데이터가 잘 나타났다.
+  - 따라서 oneDust를 사용하지 않고, 그냥 dustList 자체를 가공하여 사용하기로 했다. 
+  - LocationSelect의 경우 지역을 선택하는 순간 dispatch를 호출해서 미세먼지의 정보 상태를 업데이트 한다.
+  ```jsx
+   /** 선택된 stationName을 바탕으로 pmData를 변경하는 메소드 */
+    const handleStation = (event) => {
+        dispatch(changeStation(event.target.value))
+        dispatch(changePmData(dusts.find((dust) => dust.stationName === event.target.value))
+    }
+  ```
+  - 그리고 dustCard의 경우 oneDust prop가 가지고있는 미세먼지 정보 대신에, slice에 만든 미세먼지 state를 사용한다.
+  - 더불어서 로드 되자마자 서울의 한강대로 지역의 정보를 보여줄수 있게 useEffect를 통해 미세먼지의 정보를 업데이트 시키는 코드를 작성했다. sido와 station의 디폴트 값이 서울 한강대로라서 가능한 일 
+  ```jsx
+  function DustCard({ dustList }) {
+    const { dust, dispatch } = useDust()
+    const { pmData, station } = dust
+    useEffect(() => {
+        // 맨 처음에 로드될때는 서울 한강대로의 데이터를 가져온다
+        dispatch(changePmData(dustList?.response.body.items.find((dust) => dust.stationName === station)))
+    }, [])
+    return (
+        // 카드 컴포넌트
+        <Card sx={{ minWidth: 275, marginBottom: '20px', background: '#6c770b' }}>
+            <CardContent>
+                <Box sx={{ display: 'flex', justifyContent: 'center', gap: '10px' }}>
+                    <Typography sx={{ fontSize: 20 }} color="white" gutterBottom>
+                        {pmData.sidoName}
+                    </Typography>
+                    <Typography sx={{ fontSize: 15, paddingTop: '5px' }} color="white" gutterBottom>
+                        {pmData.stationName}
+                    </Typography>
+                </Box>
+                <Container maxWidth="sm" sx={{ display: ' flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            width: 150,
+                            height: 100,
+                            borderRadius: 5,
+                            backgroundColor: 'primary.dark',
+                            flexDirection: 'column',
+                        }}
+                    >
+                        <Typography variant="h5" component="div" color="white" fontWeight="700">
+                            {GRADE[pmData.pm10Grade]}
+                        </Typography>
+                    </Box>
+                </Container>
+                <Typography sx={{ mb: 1.5 }} color="white" marginTop="10px">
+                    미세먼지 수치 : {pmData.pm10Value}
+                </Typography>
+                <Typography sx={{ mb: 1.5 }} color="white" marginTop="10px">
+                    ({pmData.dataTime})
+                </Typography>
+            </CardContent>
+        </Card>
+    )
+}
+  ```
+  
+  이렇게 해주면
+  
+  ![GOMCAM 20230328_1657230561](https://user-images.githubusercontent.com/56331400/228168463-4622980d-5ef7-433f-aa11-c1375b90a281.gif)
+  
+  이제 제대로 동작한다.
